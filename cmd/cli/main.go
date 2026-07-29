@@ -3,12 +3,15 @@ package main
 import (
 	"fmt"
 	"lucasdasial/rupi/internal"
+	"slices"
+	"strings"
 )
 
 func main() {
 
-	fmt.Println("RUPI:::Seja bem vindo! 🖖")
-	fmt.Println("Qual url deseja encurtar?")
+	fmt.Println(titleStyle.Render("RUPI · encurtador de links"))
+	fmt.Println(hintStyle.Render("Seja bem vindo! 🖖"))
+	fmt.Println()
 
 	askLink()
 
@@ -16,23 +19,55 @@ func main() {
 		askLink()
 	}
 
-	fmt.Println("Até a próxima! 🖐️")
+	fmt.Println(byeStyle.Render("Até a próxima! 🖐️"))
 
 }
 
 func askLink() {
-	var url string
-	fmt.Scan(&url)
-	fmt.Print("Link encurtado: ")
-	fmt.Print("rupi.click/")
-	fmt.Println(internal.GetShort(url))
+	fmt.Println(promptStyle.Render("Qual link deseja encurtar?"))
+	fmt.Print("> ")
+
+	var link string
+	fmt.Scan(&link)
+
+	short := fmt.Sprintf("rupi.click/%s", internal.GetShort(link))
+
+	fmt.Println(resultLabelStyle.Render("Link encurtado:"))
+	fmt.Println(resultBoxStyle.Render(short))
 }
 
 func again() bool {
-	fmt.Println("Desejar encurtar outro link?")
+	options := []string{"sim", "não", "s", "n"}
+	optsMsg := fmt.Sprintf("Opções: %s", strings.Join(options, " | "))
 
-	var again bool
-	fmt.Scan(&again)
+	fmt.Println(promptStyle.Render("Deseja encurtar outro link?"))
+	fmt.Println(hintStyle.Render(optsMsg))
+	fmt.Print("> ")
 
-	return again
+	var awnser string
+	fmt.Scan(&awnser)
+
+	for !isCorrectAwnser(&awnser, options, optsMsg) {
+		fmt.Print("> ")
+		fmt.Scan(&awnser)
+	}
+
+	switch awnser {
+	case "sim", "s":
+		return true
+	default:
+		return false
+
+	}
+
+}
+
+func isCorrectAwnser(awnser *string, options []string, message string) bool {
+
+	if !slices.Contains(options, *awnser) {
+		fmt.Println(errorStyle.Render(fmt.Sprintf("Resposta incompatível, use uma das seguintes opções: %s", message)))
+		return false
+	}
+
+	return true
 }
