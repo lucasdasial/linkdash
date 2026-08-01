@@ -2,15 +2,15 @@ package shortener
 
 import (
 	"fmt"
+	"math/rand/v2"
 	"net/url"
-	"sync/atomic"
 
+	"lucasdasial/rupi/internal/base62"
 	"lucasdasial/rupi/internal/hashid"
 )
 
 type Shortener struct {
 	encoder *hashid.Service
-	nextID  atomic.Int64
 }
 
 func New(salt string) (*Shortener, error) {
@@ -28,9 +28,10 @@ func (s *Shortener) Shorten(rawURL string) (string, error) {
 		return "", err
 	}
 
-	id := s.nextID.Add(1)
+	// TODO: id virá do incremento automático do banco de dados; por ora é aleatório.
+	id := rand.IntN(1_000_000_000)
 
-	code, err := s.encoder.Encode(int(id))
+	code, err := s.encoder.Encode(int(base62.Decode(base62.Encode(id))))
 	if err != nil {
 		return "", fmt.Errorf("shortener: encode id %d: %w", id, err)
 	}

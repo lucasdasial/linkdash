@@ -7,7 +7,7 @@ const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
 const base = int64(len(alphabet))
 
 // Encode converts a decimal number to base62.
-func Encode(n uint64) string {
+func Encode(n int) string {
 	if n == 0 {
 		return string(alphabet[0])
 	}
