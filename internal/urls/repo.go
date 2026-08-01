@@ -1,4 +1,4 @@
-package repository
+package urls
 
 import (
 	"context"
@@ -13,15 +13,15 @@ import (
 
 var ErrNotFound = errors.New("repository: url not found")
 
-type URLRepository struct {
+type URLRepo struct {
 	pool *pgxpool.Pool
 }
 
-func NewURLRepository(pool *pgxpool.Pool) *URLRepository {
-	return &URLRepository{pool: pool}
+func NewURLRepository(pool *pgxpool.Pool) *URLRepo {
+	return &URLRepo{pool: pool}
 }
 
-func (r *URLRepository) Create(ctx context.Context, code, rawURL string) (*models.URL, error) {
+func (r *URLRepo) Create(ctx context.Context, code, rawURL string) (*models.URL, error) {
 	const query = `
 		INSERT INTO urls (code, original_url)
 		VALUES ($1, $2)
@@ -41,7 +41,7 @@ func (r *URLRepository) Create(ctx context.Context, code, rawURL string) (*model
 	return &url, nil
 }
 
-func (r *URLRepository) Get(ctx context.Context, code string) (*models.URL, error) {
+func (r *URLRepo) GetByCode(ctx context.Context, code string) (*models.URL, error) {
 	const query = `
 		SELECT id, code, original_url, clicks, created_at, expires_at
 		FROM urls
@@ -64,7 +64,7 @@ func (r *URLRepository) Get(ctx context.Context, code string) (*models.URL, erro
 	return &url, nil
 }
 
-func (r *URLRepository) List(ctx context.Context, limit, offset int) ([]models.URL, error) {
+func (r *URLRepo) List(ctx context.Context, limit, offset int) ([]models.URL, error) {
 	const query = `
 		SELECT id, code, original_url, clicks, created_at, expires_at
 		FROM urls

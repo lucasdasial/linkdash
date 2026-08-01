@@ -1,8 +1,8 @@
-package models
+package urls
 
 import "time"
 
-type URL struct {
+type UrlModel struct {
 	ID        int64     `db:"id" json:"-"`
 	Code      string    `db:"code" json:"code"`
 	RawURL    string    `db:"original_url" json:"raw_url"`

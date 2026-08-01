@@ -2,10 +2,9 @@ package urls
 
 import (
 	"fmt"
+	"lucasdasial/rupi/pkg/hashid"
 	"math/rand/v2"
 	"net/url"
-
-	"lucasdasial/rupi/internal/hashid"
 )
 
 type Service struct {

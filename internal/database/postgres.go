@@ -1,4 +1,4 @@
-package databse
+package database
 
 import (
 	"context"
@@ -13,6 +13,10 @@ func DbConnect(ctx context.Context) (*pgxpool.Pool, error) {
 	cfg, err := pgxpool.ParseConfig(os.Getenv("DATABASE_URL"))
 	if err != nil {
 		return nil, fmt.Errorf("db: parse config: %w", err)
+	}
+
+	if cfg.ConnConfig.ConnString() == "" {
+		return nil, fmt.Errorf("db: connString: Is Missing")
 	}
 
 	// PESQUISAR E TESTAR OS NUMEROS DE CONN
