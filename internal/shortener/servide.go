@@ -5,38 +5,39 @@ import (
 	"math/rand/v2"
 	"net/url"
 
-	"lucasdasial/rupi/internal/base62"
 	"lucasdasial/rupi/internal/hashid"
 )
 
-type Shortener struct {
+type Service struct {
 	encoder *hashid.Service
 }
 
-func New(salt string) (*Shortener, error) {
+func New(salt string) (*Service, error) {
 	encoder, err := hashid.New(salt)
 	if err != nil {
 		return nil, fmt.Errorf("shortener: %w", err)
 	}
 
-	return &Shortener{encoder: encoder}, nil
+	return &Service{encoder: encoder}, nil
 }
 
-// Shorten validates rawURL and returns a short code for it.
-func (s *Shortener) Shorten(rawURL string) (string, error) {
+func (s *Service) Encode(rawURL string) (string, error) {
 	if err := validateURL(rawURL); err != nil {
 		return "", err
 	}
 
-	// TODO: id virá do incremento automático do banco de dados; por ora é aleatório.
 	id := rand.IntN(1_000_000_000)
 
-	code, err := s.encoder.Encode(int(base62.Decode(base62.Encode(id))))
+	code, err := s.encoder.Encode(id)
 	if err != nil {
 		return "", fmt.Errorf("shortener: encode id %d: %w", id, err)
 	}
 
 	return code, nil
+}
+
+func (s *Service) Decode(hash string) (int, error) {
+	return s.encoder.Decode(hash)
 }
 
 func validateURL(rawURL string) error {
