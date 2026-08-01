@@ -2,7 +2,10 @@ module lucasdasial/rupi
 
 go 1.26.5
 
-require github.com/charmbracelet/lipgloss v1.1.0
+require (
+	github.com/charmbracelet/lipgloss v1.1.0
+	github.com/speps/go-hashids/v2 v2.0.1
+)
 
 require (
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect

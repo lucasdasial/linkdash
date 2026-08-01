@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"lucasdasial/rupi/internal"
 	"slices"
 	"strings"
 )
@@ -30,7 +29,7 @@ func askLink() {
 	var link string
 	fmt.Scan(&link)
 
-	short := fmt.Sprintf("rupi.click/%s", internal.GetShort(link))
+	short := fmt.Sprintf("rupi.click/%s", "lucas")
 
 	fmt.Println(resultLabelStyle.Render("Link encurtado:"))
 	fmt.Println(resultBoxStyle.Render(short))
