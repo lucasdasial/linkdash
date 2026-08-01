@@ -17,7 +17,7 @@ func New(addr string) *Server {
 	return &Server{
 		httpServer: &http.Server{
 			Addr:    addr,
-			Handler: mux,
+			Handler: loggingMiddleware(mux),
 		},
 	}
 }
