@@ -4,8 +4,11 @@ import (
 	"context"
 	"log"
 
+	"github.com/labstack/echo/v5"
+	"github.com/labstack/echo/v5/middleware"
 	"github.com/lucasdasial/linkdash/internal/config"
-	databse "github.com/lucasdasial/linkdash/internal/database"
+	"github.com/lucasdasial/linkdash/internal/core/links"
+	"github.com/lucasdasial/linkdash/internal/database"
 )
 
 func main() {
@@ -16,9 +19,18 @@ func main() {
 		log.Fatal(err)
 	}
 
-	db, err := databse.New(ctx, cfg.DbUrl)
+	db, err := database.New(ctx, cfg.DbUrl)
 	if err != nil {
 		log.Fatal(err)
 	}
-	db.Close()
+	defer db.Close()
+
+	server := echo.New()
+	server.Use(middleware.RequestLogger())
+
+	linksRepo := links.NewLinkRepo(db)
+	linksHandler := links.NewLinkHandler(*linksRepo)
+
+	linksHandler.RegisterRoutes(server.Group("/links"))
+	server.Start(":" + cfg.Port)
 }
